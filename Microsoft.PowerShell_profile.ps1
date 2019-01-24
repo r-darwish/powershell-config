@@ -35,10 +35,10 @@ foreach ($module in $modules) {
 
 function prompt
 {
-    Write-Host ($(get-location)) -nonewline
-    Write-Host " >" -nonewline  -ForegroundColor Red
-    Write-Host ">" -nonewline  -ForegroundColor Yellow
-    Write-Host ">" -nonewline  -ForegroundColor Green
+    Write-Host ($(get-location)) -NoNewLine -ForegroundColor Blue
+    Write-Host " >" -NoNewLine -ForegroundColor Red
+    Write-Host ">" -NoNewLine -ForegroundColor Yellow
+    Write-Host ">" -NoNewLine -ForegroundColor Green
     return " "
 }
 
