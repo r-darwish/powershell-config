@@ -1,4 +1,4 @@
-$modules = @("PSReadline")
+$modules = @("PSReadline", "PSColor")
 $windows_modules = @("PSWindowsUpdate")
 
 Set-Variable is_windows -option Constant -value (
@@ -33,7 +33,20 @@ foreach ($module in $modules) {
     Install-ModuleIfNeeded $module
 }
 
+function prompt
+{
+    Write-Host ($(get-location)) -nonewline
+    Write-Host " >" -nonewline  -ForegroundColor Red
+    Write-Host ">" -nonewline  -ForegroundColor Yellow
+    Write-Host ">" -nonewline  -ForegroundColor Green
+    return " "
+}
+
+Import-Module PSColor
+
 Set-PSReadlineOption -EditMode Emacs
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
+Set-PSReadlineOption -TokenKind Parameter -ForegroundColor Blue
+Set-PSReadlineOption -TokenKind Command -ForegroundColor Magenta
