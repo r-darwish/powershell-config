@@ -1,6 +1,9 @@
 $modules = @("PSReadline", "PSColor")
 $windows_modules = @("PSWindowsUpdate")
 
+$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+$admin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
 Set-Variable is_windows -option Constant -value (
     ($PSVersionTable.PSVersion.Major -lt 6) -Or
     ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
@@ -35,8 +38,13 @@ foreach ($module in $modules) {
 
 function prompt
 {
-    Write-Host ($(get-location)) -NoNewLine -ForegroundColor Blue
-    Write-Host " >" -NoNewLine -ForegroundColor Red
+    if ($admin) {
+        Write-Host "* " -NoNewLine -ForegroundColor Red
+    }
+
+    Write-Host ("$(get-location) ") -NoNewLine -ForegroundColor Blue
+
+    Write-Host ">" -NoNewLine -ForegroundColor Red
     Write-Host ">" -NoNewLine -ForegroundColor Yellow
     Write-Host ">" -NoNewLine -ForegroundColor Green
     return " "
