@@ -1,4 +1,4 @@
-$modules = @("PSReadline", "PSColor")
+$modules = @("PSReadline", "PSColor", "Jump.Location")
 $windows_modules = @("PSWindowsUpdate")
 
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
@@ -51,6 +51,7 @@ function prompt
 }
 
 Import-Module PSColor
+Import-Module Jump.Location
 
 Set-PSReadlineOption -EditMode Emacs
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
