@@ -39,14 +39,14 @@ foreach ($module in $modules) {
 function prompt
 {
     if ($admin) {
-        Write-Host "* " -NoNewLine -ForegroundColor Red
+        Write-Host "* " -NoNewLine -ForegroundColor DarkRed
     }
 
-    Write-Host ("$(get-location) ") -NoNewLine -ForegroundColor Blue
+    Write-Host ("$(get-location) ") -NoNewLine -ForegroundColor DarkBlue
 
-    Write-Host ">" -NoNewLine -ForegroundColor Red
-    Write-Host ">" -NoNewLine -ForegroundColor Yellow
-    Write-Host ">" -NoNewLine -ForegroundColor Green
+    Write-Host ">" -NoNewLine -ForegroundColor DarkRed
+    Write-Host ">" -NoNewLine -ForegroundColor DarkYellow
+    Write-Host ">" -NoNewLine -ForegroundColor DarkGreen
     return " "
 }
 
