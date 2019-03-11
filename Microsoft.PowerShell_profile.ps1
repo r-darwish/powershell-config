@@ -1,4 +1,4 @@
-$modules = @("PSReadline", "PSColor", "Jump.Location")
+$modules = @("PSReadline", "PSColor", "Jump.Location", "PSCX", "VSSetup")
 $windows_modules = @("PSWindowsUpdate")
 
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
