@@ -53,6 +53,8 @@ function prompt
 Import-Module PSColor
 Import-Module Jump.Location
 
+Set-Alias -Name z -Value j
+
 Set-PSReadlineOption -EditMode Emacs
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
