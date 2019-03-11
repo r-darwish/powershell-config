@@ -1,8 +1,8 @@
-# Powershell Configuration
+# PowerShell Configuration
 
 ![Screenshot](screenshot.png)
 
-A humble Powershell configuration
+A humble PowerShell configuration
 
 # Installation
 
@@ -10,7 +10,7 @@ A humble Powershell configuration
 git clone https://github.com/r-darwish/powershell-config (Split-Path -parent $profile)
 ```
 
-The modules will be installed automatically when you launch Powershell.
+The modules will be installed automatically when you launch PowerShell.
 
 [Topgrade](https://github.com/r-darwish/topgrade) can keep this configuration up to date and will also run Windows Update using PSWindowsUpdate
 
