@@ -74,6 +74,8 @@ Import-Module PSColor
 Import-Module Jump.Location
 
 Set-Alias -Name z -Value j
+Set-Alias -Name which -Value Get-Command
+Set-Alias -Name sudo -Value Invoke-Elevated
 
 Set-PSReadlineOption -EditMode Emacs
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
