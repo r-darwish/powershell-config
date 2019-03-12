@@ -24,6 +24,11 @@ function Install-Chocolatey
     Set-ExecutionPolicy Bypass; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
 }
 
+function Install-Scoop
+{
+    iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+}
+
 if ($is_windows) {
     foreach ($module in $windows_modules) {
         Install-ModuleIfNeeded $module

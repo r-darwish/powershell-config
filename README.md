@@ -25,5 +25,6 @@ The modules will be installed automatically when you launch PowerShell.
 # Features
 
 * Automatic installation of modules
-* `Install-Chocolatey` - A function that installs [Chocolatey](https://chocolatey.org/)
+* `Install-Chocolatey` - Install [Chocolatey](https://chocolatey.org/)
+* `Install-Scoop` - Install [Scoop](https://scoop.sh/)
 * Nice looking prompt
