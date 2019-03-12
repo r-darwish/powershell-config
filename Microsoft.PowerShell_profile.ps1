@@ -4,6 +4,8 @@ $windows_modules = @("PSWindowsUpdate")
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 $admin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 Set-Variable is_windows -option Constant -value (
     ($PSVersionTable.PSVersion.Major -lt 6) -Or
     ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
