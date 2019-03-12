@@ -27,4 +27,6 @@ The modules will be installed automatically when you launch PowerShell.
 * Automatic installation of modules
 * `Install-Chocolatey` - Install [Chocolatey](https://chocolatey.org/)
 * `Install-Scoop` - Install [Scoop](https://scoop.sh/)
+* `Download-Topgrade` - Download [Topgrade](https://github.com/r-darwish/topgrade) to the current
+  directory
 * Nice looking prompt
