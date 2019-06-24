@@ -1,8 +1,5 @@
-$modules = @("PSReadline", "Jump.Location", "PSCX", "VSSetup")
-$windows_modules = @("PSWindowsUpdate")
-
-$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
-$admin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+$modules = @("PSReadline", "PSCX", "VSSetup")
+$windows_modules = @("PSWindowsUpdate", "Jump.Location")
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
@@ -10,6 +7,11 @@ Set-Variable is_windows -option Constant -value (
     ($PSVersionTable.PSVersion.Major -lt 6) -Or
     ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
          [System.Runtime.InteropServices.OSPlatform]::Windows)))
+
+if ($is_windows) {
+    $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+    $admin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+}
 
 function Install-ModuleIfNeeded ($module)
 {
@@ -70,9 +72,11 @@ function prompt
     return " "
 }
 
-Import-Module Jump.Location
+if ($is_windows) {
+    Import-Module Jump.Location
+    Set-Alias -Name z -Value j
+}
 
-Set-Alias -Name z -Value j
 Set-Alias -Name which -Value Get-Command
 Set-Alias -Name sudo -Value Invoke-Elevated
 
