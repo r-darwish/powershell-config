@@ -1,4 +1,4 @@
-$modules = @("PSReadline", "PSColor", "Jump.Location", "PSCX", "VSSetup")
+$modules = @("PSReadline", "Jump.Location", "PSCX", "VSSetup")
 $windows_modules = @("PSWindowsUpdate")
 
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
@@ -70,7 +70,6 @@ function prompt
     return " "
 }
 
-Import-Module PSColor
 Import-Module Jump.Location
 
 Set-Alias -Name z -Value j
