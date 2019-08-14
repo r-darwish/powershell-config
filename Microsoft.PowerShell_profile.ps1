@@ -1,4 +1,4 @@
-$modules = @("PSReadline", "PSCX", "VSSetup")
+$modules = @("PSReadline", "PSCX", "VSSetup", "ZLocation")
 $windows_modules = @("PSWindowsUpdate")
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
