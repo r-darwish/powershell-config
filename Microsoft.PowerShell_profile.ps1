@@ -1,5 +1,5 @@
 $modules = @("PSReadline", "PSCX", "VSSetup")
-$windows_modules = @("PSWindowsUpdate", "Jump.Location")
+$windows_modules = @("PSWindowsUpdate")
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
@@ -70,11 +70,6 @@ function prompt
     Write-Host ">" -NoNewLine -ForegroundColor DarkYellow
     Write-Host ">" -NoNewLine -ForegroundColor DarkGreen
     return " "
-}
-
-if ($is_windows) {
-    Import-Module Jump.Location
-    Set-Alias -Name z -Value j
 }
 
 Set-Alias -Name which -Value Get-Command
