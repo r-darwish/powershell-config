@@ -75,7 +75,13 @@ function prompt
 Set-Alias -Name which -Value Get-Command
 Set-Alias -Name sudo -Value Invoke-Elevated
 
-Set-PSReadlineOption -EditMode Emacs
+$PSReadLineOptions = @{
+    EditMode = "Emacs"
+    HistoryNoDuplicates = $true
+    HistorySearchCursorMovesToEnd = $true
+}
+
+Set-PSReadLineOption @PSReadLineOptions
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
