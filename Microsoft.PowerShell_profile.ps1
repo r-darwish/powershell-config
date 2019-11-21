@@ -8,11 +8,6 @@ Set-Variable is_windows -option Constant -value (
     ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
          [System.Runtime.InteropServices.OSPlatform]::Windows)))
 
-if ($is_windows) {
-    $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
-    $admin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-}
-
 function Install-ModuleIfNeeded ($module)
 {
     if (-Not (Get-Module -List -Name $module)) {
@@ -58,19 +53,7 @@ foreach ($module in $modules) {
     Install-ModuleIfNeeded $module
 }
 
-function prompt
-{
-    if ($admin) {
-        Write-Host "* " -NoNewLine -ForegroundColor DarkRed
-    }
-
-    Write-Host ("$(get-location) ") -NoNewLine -ForegroundColor Blue
-
-    Write-Host ">" -NoNewLine -ForegroundColor Red
-    Write-Host ">" -NoNewLine -ForegroundColor Yellow
-    Write-Host ">" -NoNewLine -ForegroundColor Green
-    return " "
-}
+Invoke-Expression (&starship init powershell)
 
 Set-Alias -Name which -Value Get-Command
 Set-Alias -Name sudo -Value Invoke-Elevated
