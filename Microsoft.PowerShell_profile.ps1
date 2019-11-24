@@ -58,10 +58,21 @@ Invoke-Expression (&starship init powershell)
 Set-Alias -Name which -Value Get-Command
 Set-Alias -Name sudo -Value Invoke-Elevated
 
+$Host.UI.RawUI.ForegroundColor = "black"
 $PSReadLineOptions = @{
     EditMode = "Emacs"
     HistoryNoDuplicates = $true
     HistorySearchCursorMovesToEnd = $true
+    Colors = @{
+        Default = "DarkGray"
+        ContinuationPrompt = "DarkGray"
+        Type = "DarkGray"
+        Number = "DarkGray"
+        Operator = "Yello"
+        Command = "Magenta"
+        Parameter = "Blue"
+        Member = "DarkYellow"
+    }
 }
 
 Set-PSReadLineOption @PSReadLineOptions
