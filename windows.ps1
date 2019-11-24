@@ -1,7 +1,6 @@
-Set-Variable Modules -Option Constant -Scope Script @("VSSetup")
 Set-Alias -Name sudo -Value Invoke-Elevated
 
-$Modules | ForEach-Object Install-ModuleIfNeeded $_
+Install-ModuleIfNeeded "VSSetup"
 
 function Install-Chocolatey
 {

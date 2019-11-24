@@ -1,4 +1,3 @@
-Set-Variable Modules -Option Constant -Scope Script -Value @("PSReadline", "PSCX", "ZLocation", "Az")
 Set-Variable ProfileDirectory -Option Constant -Value (Split-Path $profile)
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -27,12 +26,13 @@ Set-PSReadLineOption @PSReadLineOptions
 $Host.UI.RawUI.ForegroundColor = "black"
 
 . "$ProfileDirectory/common.ps1"
+@("PSReadline", "PSCX", "ZLocation", "Az") | ForEach-Object { Install-ModuleIfNeeded $_ }
+
 if ($IsWindows) {
     . "$ProfileDirectory/windows.ps1"
 } else {
     . "$ProfileDirectory/unix.ps1"
 }
 
-$Modules | ForEach-Object { Install-ModuleIfNeeded $_ }
 
 Invoke-Expression (&starship init powershell)
