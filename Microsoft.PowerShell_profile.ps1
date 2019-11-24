@@ -1,8 +1,9 @@
 Set-Variable ProfileDirectory -Option Constant -Value (Split-Path $profile)
-
+Set-Alias -Name which -Value Get-Command
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-Set-Alias -Name which -Value Get-Command
+. "$ProfileDirectory/common.ps1"
+@("PSReadline", "PSCX", "ZLocation", "Az", "PSFzf") | ForEach-Object { Install-ModuleIfNeeded $_ }
 
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
@@ -12,27 +13,20 @@ Set-Variable PSReadLineOptions -Scope Script -Option Constant -Value @{
     HistoryNoDuplicates = $true
     HistorySearchCursorMovesToEnd = $true
     Colors = @{
-        Default = "DarkGray"
-        ContinuationPrompt = "DarkGray"
-        Type = "DarkGray"
-        Number = "DarkGray"
-        Operator = "Yello"
-        Command = "Magenta"
+        Operator = "Yellow"
+        Command = "Yellow"
         Parameter = "Blue"
         Member = "DarkYellow"
     }
 }
 Set-PSReadLineOption @PSReadLineOptions
-$Host.UI.RawUI.ForegroundColor = "black"
 
-. "$ProfileDirectory/common.ps1"
-@("PSReadline", "PSCX", "ZLocation", "Az") | ForEach-Object { Install-ModuleIfNeeded $_ }
+Import-Module PSFzf -ArgumentList 'Ctrl+t','Ctrl+r'
 
 if ($IsWindows) {
     . "$ProfileDirectory/windows.ps1"
 } else {
     . "$ProfileDirectory/unix.ps1"
 }
-
 
 Invoke-Expression (&starship init powershell)
