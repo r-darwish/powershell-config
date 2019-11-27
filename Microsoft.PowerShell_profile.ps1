@@ -3,7 +3,7 @@ Set-Alias -Name which -Value Get-Command
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 . "$ProfileDirectory/common.ps1"
-@("PSReadline", "PSCX", "ZLocation", "Az", "PSFzf") | ForEach-Object { Install-ModuleIfNeeded $_ }
+@("PSReadline", "PSCX", "ZLocation", "Az", "PSFzf", "Microsoft.PowerShell.GraphicalTools") | ForEach-Object { Install-ModuleIfNeeded $_ }
 
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
