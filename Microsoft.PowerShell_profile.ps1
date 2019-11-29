@@ -2,8 +2,9 @@ Set-Variable ProfileDirectory -Option Constant -Value (Split-Path $profile)
 Set-Alias -Name which -Value Get-Command
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-. "$ProfileDirectory/common.ps1"
-@("PSReadline", "ZLocation", "Az", "PSFzf", "Microsoft.PowerShell.GraphicalTools") | ForEach-Object { Install-ModuleIfNeeded $_ }
+function Install-NeededModules {
+    @("PSReadline", "ZLocation", "PSFzf") | ForEach-Object { Install-Module $_ }
+}
 
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward

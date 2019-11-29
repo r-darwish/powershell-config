@@ -1,7 +1,5 @@
 Set-Alias -Name sudo -Value Invoke-Elevated
 
-Install-ModuleIfNeeded "VSSetup"
-
 function Install-Chocolatey
 {
     Set-ExecutionPolicy Bypass; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
