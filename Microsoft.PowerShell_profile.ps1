@@ -6,6 +6,68 @@ function Install-NeededModules {
     @("PSReadline", "ZLocation", "PSFzf") | ForEach-Object { Install-Module $_ }
 }
 
+function Edit-FileInEmacs
+{
+     param(
+         [string]
+         [Parameter(Mandatory = $true, Position=0)]
+         $File)
+     emacsclient $File
+}
+
+Set-Variable VirtualEnvironmentDirectory -Option Constant -Value "~/.venvs"
+
+function Enter-VirtualEnvironment
+{
+     param(
+         [string]
+         [ArgumentCompleter(
+              {
+                  param ($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+                  Get-ChildItem $VirtualEnvironmentDirectory |
+                    Where-Object { $_.Name -like "$wordToComplete*" } |
+                    ForEach-Object { $_.Name }
+              })]
+         [Parameter(Mandatory = $true, Position=0)]
+         $Name)
+
+    $Subdir = if ($IsWindows) { "Scripts" } else { "bin" }
+    . (Join-Path $VirtualEnvironmentDirectory $Name $Subdir "activate.ps1")
+}
+
+function New-VirtualEnvironment
+{
+     param(
+         [string]
+         [Parameter(Mandatory = $true, Position=0)]
+         $Name)
+
+    python3 -m virtualenv (Join-Path $VirtualEnvironmentDirectory $Name)
+    Enter-VirtualEnvironment $Name
+}
+
+function Remove-VirtualEnvironment
+{
+     param(
+         [string]
+         [Parameter(Mandatory = $true, Position=0)]
+         [ArgumentCompleter(
+              {
+                  param ($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+                  Get-ChildItem $VirtualEnvironmentDirectory |
+                    Where-Object { $_.Name -like "$wordToComplete*" } |
+                    ForEach-Object { $_.Name }
+              })]
+         $Name)
+
+    Remove-Item -Recurse -Force (Join-Path $VirtualEnvironmentDirectory $Name)
+}
+
+Set-Alias -Name e -Value Edit-FileInEmacs
+Set-Alias -Name avenv -Value Enter-VirtualEnvironment
+Set-Alias -Name mkvenv -Value New-VirtualEnvironment
+Set-Alias -Name rmvenv -Value Remove-VirtualEnvironment
+
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
