@@ -24,6 +24,10 @@ Set-PSReadLineOption @PSReadLineOptions
 
 Import-Module PSFzf -ArgumentList 'Ctrl+t','Ctrl+r'
 
+if (Test-Path "Env:\PWD") {
+    Remove-Item "Env:\PWD"
+}
+
 if ($IsWindows) {
     . "$ProfileDirectory/windows.ps1"
 } else {
