@@ -80,9 +80,6 @@ Set-Alias -Name venv -Value Enter-VirtualEnvironment
 Set-Alias -Name mkvenv -Value New-VirtualEnvironment
 Set-Alias -Name rmvenv -Value Remove-VirtualEnvironment
 
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
-Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
 Set-Variable PSReadLineOptions -Scope Script -Option Constant -Value @{
     EditMode = "Emacs"
     HistoryNoDuplicates = $true
@@ -92,9 +89,13 @@ Set-Variable PSReadLineOptions -Scope Script -Option Constant -Value @{
         Command = "Yellow"
         Parameter = "Blue"
         Member = "DarkYellow"
+        Selection = "`e[1;37;1;40m"
     }
 }
 Set-PSReadLineOption @PSReadLineOptions
+Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
+Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
 
 Import-Module PSFzf -ArgumentList 'Ctrl+t','Ctrl+r'
 
