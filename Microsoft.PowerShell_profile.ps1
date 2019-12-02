@@ -109,6 +109,8 @@ Set-PSReadLineOption @PSReadLineOptions
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
+Set-PSReadlineKeyHandler -Key Ctrl+f -Function CharacterSearch
+Set-PSReadlineKeyHandler -Key Ctrl+b -Function CharacterSearchBackward
 
 Import-Module PSFzf -ArgumentList 'Ctrl+t','Ctrl+r'
 
