@@ -60,6 +60,21 @@ function Remove-VirtualEnvironment
     Remove-Item -Recurse -Force (Join-Path $VirtualEnvironmentDirectory $Name)
 }
 
+Register-ArgumentCompleter -CommandName Enter-VirtualEnvironment -ParameterName Name -ScriptBlock $VirtualenvCompleter
+Register-ArgumentCompleter -CommandName Remove-VirtualEnvironment -ParameterName Name -ScriptBlock $VirtualenvCompleter
+
+Function Enter-TmuxSession {
+    [CmdletBinding()]
+    Param (
+        [string]
+        [Parameter(Position=0)]
+        $Session="main"
+    )
+
+    tmux new-session -A -s $Session
+}
+
+Set-Alias -Name t -Value Enter-TmuxSession
 Set-Alias -Name e -Value Edit-FileInEmacs
 Set-Alias -Name venv -Value Enter-VirtualEnvironment
 Set-Alias -Name mkvenv -Value New-VirtualEnvironment
