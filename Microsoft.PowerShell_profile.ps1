@@ -8,6 +8,7 @@ function Install-NeededModules {
 
 function Edit-FileInEmacs
 {
+    [CmdletBinding()]
      param(
          [string]
          [Parameter(Mandatory = $true, Position=0)]
@@ -17,17 +18,18 @@ function Edit-FileInEmacs
 
 Set-Variable VirtualEnvironmentDirectory -Option Constant -Value "~/.venvs"
 
-function Enter-VirtualEnvironment
-{
-     param(
-         [string]
-         [ArgumentCompleter(
-              {
-                  param ($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+$VirtualenvCompleter = {
+    param ($commandName, $parameterName, $wordToComplete)
                   Get-ChildItem $VirtualEnvironmentDirectory |
                     Where-Object { $_.Name -like "$wordToComplete*" } |
                     ForEach-Object { $_.Name }
-              })]
+}
+
+function Enter-VirtualEnvironment
+{
+    [CmdletBinding()]
+     param(
+         [string]
          [Parameter(Mandatory = $true, Position=0)]
          $Name)
 
@@ -37,6 +39,7 @@ function Enter-VirtualEnvironment
 
 function New-VirtualEnvironment
 {
+    [CmdletBinding()]
      param(
          [string]
          [Parameter(Mandatory = $true, Position=0)]
@@ -48,23 +51,17 @@ function New-VirtualEnvironment
 
 function Remove-VirtualEnvironment
 {
+    [CmdletBinding()]
      param(
          [string]
          [Parameter(Mandatory = $true, Position=0)]
-         [ArgumentCompleter(
-              {
-                  param ($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                  Get-ChildItem $VirtualEnvironmentDirectory |
-                    Where-Object { $_.Name -like "$wordToComplete*" } |
-                    ForEach-Object { $_.Name }
-              })]
          $Name)
 
     Remove-Item -Recurse -Force (Join-Path $VirtualEnvironmentDirectory $Name)
 }
 
 Set-Alias -Name e -Value Edit-FileInEmacs
-Set-Alias -Name avenv -Value Enter-VirtualEnvironment
+Set-Alias -Name venv -Value Enter-VirtualEnvironment
 Set-Alias -Name mkvenv -Value New-VirtualEnvironment
 Set-Alias -Name rmvenv -Value Remove-VirtualEnvironment
 
