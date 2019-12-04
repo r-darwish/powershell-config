@@ -108,6 +108,7 @@ Set-PSReadlineKeyHandler -Key Ctrl+f -Function CharacterSearch
 Set-PSReadlineKeyHandler -Key Ctrl+b -Function CharacterSearchBackward
 
 Import-Module PSFzf -ArgumentList 'Ctrl+t', 'Ctrl+r'
+@("Posh-Git", "Get-ChildItemColor") | Import-Module -ErrorAction SilentlyContinue
 
 if (Test-Path "Env:\PWD") {
     Remove-Item "Env:\PWD"
