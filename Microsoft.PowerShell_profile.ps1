@@ -28,8 +28,8 @@ function Invoke-Magit {
 
 Set-Variable VirtualEnvironmentDirectory -Option Constant -Value "~/.venvs"
 
-$VirtualenvCompleter = {
-    param ($commandName, $parameterName, $wordToComplete)
+$script:VirtualenvCompleter = {
+    param($commandName, $parameterName, $wordToComplete)
     Get-ChildItem $VirtualEnvironmentDirectory |
     Where-Object { $_.Name -like "$wordToComplete*" } |
     ForEach-Object { $_.Name }
@@ -67,12 +67,12 @@ function Remove-VirtualEnvironment {
     Remove-Item -Recurse -Force (Join-Path $VirtualEnvironmentDirectory $Name)
 }
 
-Register-ArgumentCompleter -CommandName Enter-VirtualEnvironment -ParameterName Name -ScriptBlock $VirtualenvCompleter
-Register-ArgumentCompleter -CommandName Remove-VirtualEnvironment -ParameterName Name -ScriptBlock $VirtualenvCompleter
+Register-ArgumentCompleter -CommandName Enter-VirtualEnvironment -ParameterName Name -ScriptBlock $script:VirtualenvCompleter
+Register-ArgumentCompleter -CommandName Remove-VirtualEnvironment -ParameterName Name -ScriptBlock $script:VirtualenvCompleter
 
 Function Enter-TmuxSession {
     [CmdletBinding()]
-    Param (
+    param(
         [string]
         [Parameter(Position = 0)]
         $Session = "main"
