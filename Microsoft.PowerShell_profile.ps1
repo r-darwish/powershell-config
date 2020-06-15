@@ -121,6 +121,4 @@ else {
     . "$ProfileDirectory/unix.ps1"
 }
 
-if ($env:TERM_PROGRAM -ne "vscode") {
-    Invoke-Expression (&starship init powershell)
-}
+Invoke-Expression (&starship init powershell)
