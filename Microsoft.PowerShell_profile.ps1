@@ -6,26 +6,6 @@ function Install-NeededModules {
     @("PSReadline", "ZLocation", "PSFzf") | ForEach-Object { Install-Module $_ }
 }
 
-function Edit-FileInEmacs {
-    [CmdletBinding()]
-    param(
-        [string]
-        [Parameter(Mandatory = $true, Position = 0)]
-        $File)
-    emacsclient $File
-}
-
-function Invoke-Magit {
-    [CmdletBinding()]
-    param(
-        [string]
-        [Parameter(Position = 0)]
-        $Dir = ".")
-    Push-Location $Dir
-    emacsclient -e "(magit-status)" -c -n
-    Pop-Location
-}
-
 Set-Variable VirtualEnvironmentDirectory -Option Constant -Value "~/.venvs"
 
 $script:VirtualenvCompleter = {
@@ -82,8 +62,6 @@ Function Enter-TmuxSession {
 }
 
 Set-Alias -Name t -Value Enter-TmuxSession
-Set-Alias -Name e -Value Edit-FileInEmacs
-Set-Alias -Name magit -Value Invoke-Magit
 Set-Alias -Name venv -Value Enter-VirtualEnvironment
 Set-Alias -Name mkvenv -Value New-VirtualEnvironment
 Set-Alias -Name rmvenv -Value Remove-VirtualEnvironment
