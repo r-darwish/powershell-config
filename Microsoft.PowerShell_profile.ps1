@@ -3,7 +3,7 @@ Set-Alias -Name which -Value Get-Command
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 function Install-NeededModules {
-    @("PSReadline", "ZLocation", "PSFzf") | ForEach-Object { Install-Module $_ }
+    @("PSReadline", "ZLocation", "PSFzf", "Get-ChildItemColor") | ForEach-Object { Install-Module $_ }
 }
 
 Set-Variable VirtualEnvironmentDirectory -Option Constant -Value "~/.venvs"
