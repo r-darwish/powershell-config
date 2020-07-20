@@ -1,17 +1,17 @@
 function Install-Chocolatey {
-    Set-ExecutionPolicy Bypass; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
+    Set-ExecutionPolicy Bypass; Invoke-WebRequest https://chocolatey.org/install.ps1 -UseBasicParsing | Invoke-Expression
 }
 
 function Install-Scoop {
-    iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+    Invoke-Expression (new-object net.webclient).downloadstring('https://get.scoop.sh')
 }
 
-function Download-Topgrade {
+function Get-Topgrade {
     $url = (Invoke-WebRequest "https://api.github.com/repos/r-darwish/topgrade/releases/latest" |
         ConvertFrom-Json |
-        Select -expand assets |
+        Select-Object -expand assets |
         Where-Object { $_.name -like '*msvc*' } |
-        Select -expand browser_download_url);
+        Select-Object -expand browser_download_url);
 
     Invoke-WebRequest -Uri $url -OutFile topgrade.zip
     Expand-Archive -Path topgrade.zip

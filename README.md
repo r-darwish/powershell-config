@@ -29,5 +29,14 @@ You should also install [Starship](https://starship.rs/) before using this confi
 * Automatic installation of modules
 * `Install-Chocolatey` - Install [Chocolatey](https://chocolatey.org/)
 * `Install-Scoop` - Install [Scoop](https://scoop.sh/)
-* `Download-Topgrade` - Download [Topgrade](https://github.com/r-darwish/topgrade) to the current
+* `Get-Topgrade` - Download [Topgrade](https://github.com/r-darwish/topgrade) to the current
   directory
+
+# Other helpful modules
+
+These modules aren't installed by `Install-NeededModules`.
+
+* Microsoft.PowerShell.GraphicalTools - For Out-GridView
+* Az - Azure control
+* VSSetup - Import Visual Studio build environment
+
