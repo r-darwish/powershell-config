@@ -3,7 +3,9 @@ Set-Alias -Name which -Value Get-Command
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 function Install-NeededModules {
-    @("PSReadline", "ZLocation", "PSFzf", "Get-ChildItemColor") | ForEach-Object { Install-Module $_ }
+    Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
+    @("PSReadline", "ZLocation", "PSFzf") | ForEach-Object { Install-Module $_ -Force }
+    Install-Module -AllowClobber "Get-ChildItemColor"
 }
 
 Set-Variable VirtualEnvironmentDirectory -Option Constant -Value "~/.venvs"
@@ -50,18 +52,6 @@ function Remove-VirtualEnvironment {
 Register-ArgumentCompleter -CommandName Enter-VirtualEnvironment -ParameterName Name -ScriptBlock $script:VirtualenvCompleter
 Register-ArgumentCompleter -CommandName Remove-VirtualEnvironment -ParameterName Name -ScriptBlock $script:VirtualenvCompleter
 
-Function Enter-TmuxSession {
-    [CmdletBinding()]
-    param(
-        [string]
-        [Parameter(Position = 0)]
-        $Session = "main"
-    )
-
-    tmux new-session -A -s $Session
-}
-
-Set-Alias -Name t -Value Enter-TmuxSession
 Set-Alias -Name venv -Value Enter-VirtualEnvironment
 Set-Alias -Name mkvenv -Value New-VirtualEnvironment
 Set-Alias -Name rmvenv -Value Remove-VirtualEnvironment
@@ -86,7 +76,14 @@ Set-PSReadlineKeyHandler -Key Ctrl+f -Function CharacterSearch
 Set-PSReadlineKeyHandler -Key Ctrl+b -Function CharacterSearchBackward
 
 Import-Module PSFzf -ArgumentList 'Ctrl+t', 'Ctrl+r'
-@("Posh-Git", "Get-ChildItemColor") | Import-Module -ErrorAction SilentlyContinue
+@("Posh-Git") | Import-Module -ErrorAction SilentlyContinue
+
+If (-Not (Test-Path Variable:PSise)) {
+    Import-Module Get-ChildItemColor
+    
+    Set-Alias l Get-ChildItem -option AllScope
+    Set-Alias ls Get-ChildItemColorFormatWide -option AllScope
+}
 
 if (Test-Path "Env:\PWD") {
     Remove-Item "Env:\PWD"
