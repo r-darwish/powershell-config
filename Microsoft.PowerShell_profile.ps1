@@ -4,7 +4,7 @@ Set-Alias -Name which -Value Get-Command
 
 function Install-NeededModules {
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-    @("PSReadline", "ZLocation", "PSFzf") | ForEach-Object { Install-Module $_ -Force }
+    @("PSReadline", "ZLocation") | ForEach-Object { Install-Module $_ -Force }
     Install-Module -AllowClobber "Get-ChildItemColor"
 }
 
@@ -75,13 +75,8 @@ Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
 Set-PSReadlineKeyHandler -Key Ctrl+f -Function CharacterSearch
 Set-PSReadlineKeyHandler -Key Ctrl+b -Function CharacterSearchBackward
 
-Import-Module PSFzf -ArgumentList 'Ctrl+t', 'Ctrl+r'
-@("Posh-Git") | Import-Module -ErrorAction SilentlyContinue
-
 If (-Not (Test-Path Variable:PSise)) {
-    Import-Module Get-ChildItemColor
-    
-    Set-Alias l Get-ChildItem -option AllScope
+    Set-Alias l Get-ChildItemColor -option AllScope
     Set-Alias ls Get-ChildItemColorFormatWide -option AllScope
 }
 
