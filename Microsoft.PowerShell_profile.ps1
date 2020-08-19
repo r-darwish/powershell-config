@@ -84,6 +84,10 @@ if (Test-Path "Env:\PWD") {
     Remove-Item "Env:\PWD"
 }
 
+if (Test-Path "$ProfileDirectory/local.ps1" -PathType Leaf) {
+    . "$ProfileDirectory/local.ps1"
+}
+
 if ($IsWindows) {
     . "$ProfileDirectory/windows.ps1"
 }
