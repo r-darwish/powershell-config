@@ -11,4 +11,4 @@ Function Enter-TmuxSession {
 
 Set-Alias -Name t -Value Enter-TmuxSession
 
-$env:PATH += ":/usr/local/bin"
+$env:PATH += ":/usr/local/bin:$home/.local/bin"
