@@ -69,15 +69,14 @@ Set-Variable PSReadLineOptions -Scope Script -Option Constant -Value @{
     }
 }
 Set-PSReadLineOption @PSReadLineOptions
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
-Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
-Set-PSReadlineKeyHandler -Key Ctrl+f -Function CharacterSearch
-Set-PSReadlineKeyHandler -Key Ctrl+b -Function CharacterSearchBackward
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
+Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+Set-PSReadLineKeyHandler -Key Ctrl+f -Function CharacterSearch
+Set-PSReadLineKeyHandler -Key Ctrl+b -Function CharacterSearchBackward
 
 If (-Not (Test-Path Variable:PSise)) {
-    Set-Alias l Get-ChildItemColor -option AllScope
-    Set-Alias ls Get-ChildItemColorFormatWide -option AllScope
+    Set-Alias ls Get-ChildItemColor -Option AllScope
 }
 
 if (Test-Path "Env:\PWD") {
