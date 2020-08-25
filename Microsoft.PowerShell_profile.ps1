@@ -5,8 +5,15 @@ Set-Alias -Name which -Value Get-Command
 function Install-NeededModules {
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
     @("PSReadline", "ZLocation") | ForEach-Object { Install-Module $_ -Force }
+
+    if (!$IsWindows) {
+        Install-Module Microsoft.PowerShell.UnixCompleters
+    }
+
     Install-Module -AllowClobber "Get-ChildItemColor"
 }
+
+Import-Module posh-git
 
 Set-Variable VirtualEnvironmentDirectory -Option Constant -Value "~/.venvs"
 

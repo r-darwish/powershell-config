@@ -16,3 +16,5 @@ $env:PATH += ":/usr/local/bin:$home/.local/bin"
 function exec {
     Start-Process $args[0] $args[1..$args.Length] -Wait
 }
+
+Import-Module Microsoft.PowerShell.UnixCompleters
