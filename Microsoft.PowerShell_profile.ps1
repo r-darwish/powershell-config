@@ -81,6 +81,9 @@ Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
 Set-PSReadLineKeyHandler -Key Ctrl+f -Function CharacterSearch
 Set-PSReadLineKeyHandler -Key Ctrl+b -Function CharacterSearchBackward
+Set-PSReadLineKeyHandler -Key Ctrl+LeftArrow -Function BackwardWord
+Set-PSReadLineKeyHandler -Key Ctrl+RightArrow -Function ForwardWord
+Set-PSReadLineKeyHandler -Key Ctrl+Backspace -Function BackwardKillWord
 
 If (-Not (Test-Path Variable:PSise)) {
     Set-Alias ls Get-ChildItemColor -Option AllScope
