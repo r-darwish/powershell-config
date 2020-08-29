@@ -4,7 +4,7 @@ Set-Alias -Name which -Value Get-Command
 
 function Install-NeededModules {
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-    @("PSReadline", "ZLocation") | ForEach-Object { Install-Module $_ -Force }
+    @("PSReadline", "ZLocation", "posh-git").ForEach{ Install-Module $_ -Force }
 
     if (!$IsWindows) {
         Install-Module Microsoft.PowerShell.UnixCompleters
