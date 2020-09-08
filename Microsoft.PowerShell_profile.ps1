@@ -1,4 +1,4 @@
-Set-Variable ProfileDirectory -Option Constant -Value (Split-Path $profile)
+Set-Variable ProfileDirectory -Option Constant -Value $PSScriptRoot
 Set-Alias -Name which -Value Get-Command
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
