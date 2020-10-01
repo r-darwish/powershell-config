@@ -13,6 +13,10 @@ Set-Alias -Name t -Value Enter-TmuxSession
 
 $env:PATH += ":/usr/local/bin:$home/.local/bin"
 
+if (Test-Path -Path "~/.cargo/bin") {
+    $env:PATH += ":~/.cargo/bin"
+}
+
 function exec {
     Start-Process $args[0] $args[1..$args.Length] -Wait
 }
