@@ -38,11 +38,14 @@ function Enter-VirtualEnvironment {
 function New-VirtualEnvironment {
     [CmdletBinding()]
     param(
-        [string]
         [Parameter(Mandatory = $true, Position = 0)]
-        $Name)
+        [string]
+        $Name,
+        
+        [Parameter()]
+        $Python = "python3")
 
-    python3 -m virtualenv (Join-Path $VirtualEnvironmentDirectory $Name)
+    &$Python -m virtualenv (Join-Path $VirtualEnvironmentDirectory $Name)
     Enter-VirtualEnvironment $Name
 }
 
