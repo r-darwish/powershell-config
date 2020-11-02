@@ -25,10 +25,6 @@ function Install-NeededModules {
     Install-Module -AllowClobber "Get-ChildItemColor"
 }
 
-Import-Module posh-git
-
-
-
 Set-Variable PSReadLineOptions -Scope Script -Option Constant -Value @{
     EditMode                      = "Emacs"
     HistoryNoDuplicates           = $true
@@ -107,10 +103,7 @@ if (Test-Path "$ProfileDirectory/local.ps1" -PathType Leaf) {
     . "$ProfileDirectory/local.ps1"
 }
 
-if ($IsWindows) {
-    . "$ProfileDirectory/windows.ps1"
-}
-else {
+if (-not $IsWindows) {
     . "$ProfileDirectory/unix.ps1"
 }
 
