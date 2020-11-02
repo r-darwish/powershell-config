@@ -15,7 +15,7 @@ function Install-NeededModules {
 
 Import-Module posh-git
 
-Set-Variable VirtualEnvironmentDirectory -Option Constant -Value "~/.venvs"
+Set-Variable VirtualEnvironmentDirectory -Option Constant -Value ($IsWindows ? "$env:APPDATA/venvs" : "~/.venvs")
 
 $script:VirtualenvCompleter = {
     param($commandName, $parameterName, $wordToComplete)
@@ -46,6 +46,10 @@ function New-VirtualEnvironment {
         $Python = "python3")
 
     &$Python -m virtualenv (Join-Path $VirtualEnvironmentDirectory $Name)
+    if ($LastExitCode -ne 0) {
+        throw "Environment creation failed"
+    }
+
     Enter-VirtualEnvironment $Name
 }
 
@@ -151,4 +155,5 @@ else {
     . "$ProfileDirectory/unix.ps1"
 }
 
+$env:VIRTUAL_ENV_DISABLE_PROMPT = 1
 Invoke-Expression (&starship init powershell)
