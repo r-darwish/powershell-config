@@ -2,6 +2,18 @@ Set-Variable ProfileDirectory -Option Constant -Value $PSScriptRoot
 Set-Alias -Name which -Value Get-Command
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
+function AddPath {
+    param ($Current, $New)
+
+    if (($Current -inotcontains $New) -and (Test-Path $New)) {
+        $Current += ($IsWindows ? ";" : ":") + $New
+    }
+
+    $Current
+}
+
+$env:PSModulePath = AddPath $env:PSModulePath (Join-Path $ProfileDirectory "BundledModules")
+
 function Install-NeededModules {
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
     @("PSReadline", "ZLocation", "posh-git", "Microsoft.PowerShell.ConsoleGuiTools").ForEach{ Install-Module $_ -Force }
@@ -15,60 +27,7 @@ function Install-NeededModules {
 
 Import-Module posh-git
 
-Set-Variable VirtualEnvironmentDirectory -Option Constant -Value ($IsWindows ? "$env:APPDATA/venvs" : "~/.venvs")
 
-$script:VirtualenvCompleter = {
-    param($commandName, $parameterName, $wordToComplete)
-    Get-ChildItem $VirtualEnvironmentDirectory |
-    Where-Object { $_.Name -like "$wordToComplete*" } |
-    ForEach-Object { $_.Name }
-}
-
-function Enter-VirtualEnvironment {
-    [CmdletBinding()]
-    param(
-        [string]
-        [Parameter(Mandatory = $true, Position = 0)]
-        $Name)
-
-    $Subdir = if ($IsWindows) { "Scripts" } else { "bin" }
-    . (Join-Path $VirtualEnvironmentDirectory $Name $Subdir "activate.ps1")
-}
-
-function New-VirtualEnvironment {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true, Position = 0)]
-        [string]
-        $Name,
-        
-        [Parameter()]
-        $Python = "python3")
-
-    &$Python -m virtualenv (Join-Path $VirtualEnvironmentDirectory $Name)
-    if ($LastExitCode -ne 0) {
-        throw "Environment creation failed"
-    }
-
-    Enter-VirtualEnvironment $Name
-}
-
-function Remove-VirtualEnvironment {
-    [CmdletBinding()]
-    param(
-        [string]
-        [Parameter(Mandatory = $true, Position = 0)]
-        $Name)
-
-    Remove-Item -Recurse -Force (Join-Path $VirtualEnvironmentDirectory $Name)
-}
-
-Register-ArgumentCompleter -CommandName Enter-VirtualEnvironment -ParameterName Name -ScriptBlock $script:VirtualenvCompleter
-Register-ArgumentCompleter -CommandName Remove-VirtualEnvironment -ParameterName Name -ScriptBlock $script:VirtualenvCompleter
-
-Set-Alias -Name venv -Value Enter-VirtualEnvironment
-Set-Alias -Name mkvenv -Value New-VirtualEnvironment
-Set-Alias -Name rmvenv -Value Remove-VirtualEnvironment
 
 Set-Variable PSReadLineOptions -Scope Script -Option Constant -Value @{
     EditMode                      = "Emacs"
