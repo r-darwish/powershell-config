@@ -3,10 +3,40 @@ Set-Alias -Name which -Value Get-Command
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 function AddPath {
-    param ($Current, $New)
+    param (
+        # Parameter help description
+        [Parameter(Mandatory, Position = 0)]
+        [string]
+        $Current, 
+    
+        # New paths to add
+        [Parameter(Mandatory, Position = 1)]
+        [string[]]
+        $New, 
 
-    if (($Current -inotcontains $New) -and (Test-Path $New)) {
-        $Current += ($IsWindows ? ";" : ":") + $New
+        # Prepend paths instead of appending
+        [Parameter()]
+        [switch]
+        $Prepend
+    )
+
+    $seperator = ($IsWindows ? ";" : ":")
+
+    foreach ($p in $New) {
+        $resolved = (Resolve-Path $p -ErrorAction SilentlyContinue)
+        if (-not $resolved) {
+            continue;
+        }
+        $resolved = $resolved.Path
+
+        if (($Current -split $seperator) -inotcontains $resolved) {
+            if ($Prepend) {
+                $Current = $resolved + $seperator + $Current
+            }
+            else {
+                $Current += $seperator + $resolved
+            }
+        }
     }
 
     $Current
