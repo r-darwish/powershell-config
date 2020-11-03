@@ -1,7 +1,7 @@
 $VirtualEnvironmentDirectory = ($IsWindows ? "$env:APPDATA\venvs" : "~/.venvs")
 
 
-$script:VirtualenvCompleter = {
+$VirtualenvCompleter = {
     param($commandName, $parameterName, $wordToComplete)
     Get-ChildItem $VirtualEnvironmentDirectory |
     Where-Object { $_.Name -like "$wordToComplete*" } |
@@ -47,8 +47,8 @@ function Remove-VirtualEnvironment {
     Remove-Item -Recurse -Force (Join-Path $VirtualEnvironmentDirectory $Name)
 }
 
-Register-ArgumentCompleter -CommandName Enter-VirtualEnvironment -ParameterName Name -ScriptBlock $script:VirtualenvCompleter
-Register-ArgumentCompleter -CommandName Remove-VirtualEnvironment -ParameterName Name -ScriptBlock $script:VirtualenvCompleter
+Register-ArgumentCompleter -CommandName Enter-VirtualEnvironment -ParameterName Name -ScriptBlock $VirtualenvCompleter
+Register-ArgumentCompleter -CommandName Remove-VirtualEnvironment -ParameterName Name -ScriptBlock $VirtualenvCompleter
 
 Set-Alias -Name venv -Value Enter-VirtualEnvironment
 Set-Alias -Name mkvenv -Value New-VirtualEnvironment
