@@ -25,3 +25,17 @@ function New-Container {
         throw "Docker failed"
     }
 }
+
+function kubectx {
+    $ctx = kubectl config get-contexts -o name || throw "kubectl failed"
+    $ctx = $ctx | Out-ConsoleGridView -OutputMode Single -Title "Select a context"
+    if (-not $ctx) {
+        throw "No context selected"
+    }
+
+    kubectl config use-context $ctx || throw "kubectl failed"
+
+    $namespaces = (kubectl get namespaces -o name || throw "Kubectl failed" ).ForEach{ $_ -replace "namespace/" }
+    $namespace = $namespaces | Out-ConsoleGridView -OutputMode Single -Title "Select a namespace in $ctx"
+    kubectl config set-context --current --namespace=$namespace || throw "kubectl failed"
+}
