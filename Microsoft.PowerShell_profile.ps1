@@ -1,3 +1,5 @@
+using namespace Microsoft.PowerShell;
+
 Set-Variable ProfileDirectory -Option Constant -Value $PSScriptRoot
 Set-Alias -Name which -Value Get-Command
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -47,10 +49,10 @@ $env:PATH = AddPath $env:PATH (Join-Path $ProfileDirectory "Scripts")
 
 function Install-NeededModules {
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-    @("PSReadline", "ZLocation", "posh-git", "Microsoft.PowerShell.ConsoleGuiTools").ForEach{ Install-Module $_ -Force }
+    @("PSReadline", "ZLocation", "posh-git", "ConsoleGuiTools").ForEach{ Install-Module $_ -Force }
 
     if (!$IsWindows) {
-        Install-Module Microsoft.PowerShell.UnixCompleters
+        Install-Module UnixCompleters
     }
 
     Install-Module -AllowClobber "Get-ChildItemColor"
@@ -79,23 +81,23 @@ Set-PSReadLineKeyHandler -Key Ctrl+LeftArrow -Function BackwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+RightArrow -Function ForwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+Backspace -Function BackwardKillWord
 Set-PSReadLineKeyHandler -Key Alt+Enter -ScriptBlock { 
-    [Microsoft.PowerShell.PSConsoleReadLine]::AcceptSuggestion(); 
-    [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine() 
+    [PSConsoleReadLine]::AcceptSuggestion(); 
+    [PSConsoleReadLine]::AcceptLine() 
 }
 
 function ocgv_history {
     $line = $null
     $cursor = $null
-    [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
+    [PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
     $selection = $history | Out-ConsoleGridView -Title "Select CommandLine from History" -OutputMode Single -Filter $line
     if ($selection) {
-        [Microsoft.PowerShell.PSConsoleReadLine]::DeleteLine()
-        [Microsoft.PowerShell.PSConsoleReadLine]::Insert($selection)
+        [PSConsoleReadLine]::DeleteLine()
+        [PSConsoleReadLine]::Insert($selection)
         if ($selection.StartsWith($line)) {
-            [Microsoft.PowerShell.PSConsoleReadLine]::SetCursorPosition($cursor)
+            [PSConsoleReadLine]::SetCursorPosition($cursor)
         }
         else {
-            [Microsoft.PowerShell.PSConsoleReadLine]::SetCursorPosition($selection.Length)
+            [PSConsoleReadLine]::SetCursorPosition($selection.Length)
         }    
     }
 }
@@ -119,7 +121,7 @@ $parameters = @{
     LongDescription  = 'Show Matching History for all PowerShell instances using Out-ConsoleGridView'
     ScriptBlock      = {
         param($key, $arg)   # The arguments are ignored in this example
-        $history = [Microsoft.PowerShell.PSConsoleReadLine]::GetHistoryItems().CommandLine 
+        $history = [PSConsoleReadLine]::GetHistoryItems().CommandLine 
         # reverse the items so most recent is on top
         [array]::Reverse($history) 
         $history | Select-Object -Unique | ocgv_history
