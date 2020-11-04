@@ -43,6 +43,7 @@ function AddPath {
 }
 
 $env:PSModulePath = AddPath $env:PSModulePath (Join-Path $ProfileDirectory "BundledModules")
+$env:PATH = AddPath $env:PATH (Join-Path $ProfileDirectory "Scripts")
 
 function Install-NeededModules {
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
