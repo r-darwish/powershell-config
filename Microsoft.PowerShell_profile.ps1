@@ -80,7 +80,7 @@ Set-PSReadLineKeyHandler -Key Ctrl+b -Function CharacterSearchBackward
 Set-PSReadLineKeyHandler -Key Ctrl+LeftArrow -Function BackwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+RightArrow -Function ForwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+Backspace -Function BackwardKillWord
-Set-PSReadLineKeyHandler -Key Alt+Enter -ScriptBlock { 
+Set-PSReadLineKeyHandler -Key Ctrl+Enter -ScriptBlock { 
     [PSConsoleReadLine]::AcceptSuggestion(); 
     [PSConsoleReadLine]::AcceptLine() 
 }
