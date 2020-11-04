@@ -1,6 +1,11 @@
 class Package {
     [string]$Name
     [PackageManager]$Manager
+
+    Package([string]$Name, [PackageManager]$Manager) {
+        $this.Name = $Name
+        $this.Manager = $Manager
+    }
 }
 
 enum PackageManager {
@@ -11,19 +16,8 @@ enum PackageManager {
 $packages = @()
 
 if ($IsMacOS) {
-    $packages += (brew leaves).ForEach{ 
-        $pkg = [Package]::new()
-        $pkg.Manager = [PackageManager]::Brew
-        $pkg.Name = $_
-        $pkg
-    }
-
-    $packages += (brew list --cask).ForEach{ 
-        $pkg = [Package]::new()
-        $pkg.Manager = [PackageManager]::BrewCask
-        $pkg.Name = $_
-        $pkg
-    }
+    $packages += (brew leaves).ForEach{ [Package]::new($_, "Brew") }
+    $packages += (brew list --cask).ForEach{ [Package]::new($_, "BrewCask") }
 }
 
 $toRemove = $packages | Out-ConsoleGridView -Title "Select packages to remove"
