@@ -85,6 +85,25 @@ Set-PSReadLineKeyHandler -Key Alt+Enter -ScriptBlock {
     [PSConsoleReadLine]::AcceptLine() 
 }
 
+function AddPrefix {
+    param([string]$prefix)
+
+    $line = $null
+    $cursor = $null
+    [PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
+
+    if ($line.StartsWith($prefix)) {
+        return
+    }
+
+    [PSConsoleReadLine]::SetCursorPosition(0)
+    [PSConsoleReadLine]::Insert($prefix)
+    [PSConsoleReadLine]::SetCursorPosition($cursor + $prefix.Length)
+}
+
+Set-PSReadLineKeyHandler -Key Alt+x -ScriptBlock { AddPrefix "`$x = " }
+Set-PSReadLineKeyHandler -Key Alt+s -ScriptBlock { AddPrefix "sudo " }
+
 function ocgv_history {
     $line = $null
     $cursor = $null
