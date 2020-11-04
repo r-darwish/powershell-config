@@ -58,6 +58,7 @@ function Install-NeededModules {
 
 Set-Variable PSReadLineOptions -Scope Script -Option Constant -Value @{
     EditMode                      = "Emacs"
+    PredictionSource              = "History"
     HistoryNoDuplicates           = $true
     HistorySearchCursorMovesToEnd = $true
     Colors                        = @{
@@ -77,6 +78,11 @@ Set-PSReadLineKeyHandler -Key Ctrl+b -Function CharacterSearchBackward
 Set-PSReadLineKeyHandler -Key Ctrl+LeftArrow -Function BackwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+RightArrow -Function ForwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+Backspace -Function BackwardKillWord
+Set-PSReadLineKeyHandler -Key Alt+Enter -ScriptBlock { 
+    [Microsoft.PowerShell.PSConsoleReadLine]::AcceptSuggestion(); 
+    [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine() 
+}
+
 function ocgv_history {
     $line = $null
     $cursor = $null
