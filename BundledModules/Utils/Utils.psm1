@@ -39,3 +39,40 @@ function kubectx {
     $namespace = $namespaces | Out-ConsoleGridView -OutputMode Single -Title "Select a namespace in $ctx"
     kubectl config set-context --current --namespace=$namespace || throw "kubectl failed"
 }
+
+function Get-GitBranches {
+    [CmdletBinding()]
+    param (
+        # Include Remotes
+        [Parameter()]
+        [switch]
+        $Remotes
+    )
+
+    $gitArgs = @("branch", '--format=%(refname:short)')
+    if ($Remotes) {
+        $gitArgs += "-r"
+    }
+    git $gitArgs
+}
+
+function fork {
+    [CmdletBinding()]
+    param (
+        # Branch Name
+        [Parameter(Mandatory, Position = 0)]
+        [string]$Name
+    )
+    
+    $existing = Get-GitBranches -Remotes | Out-ConsoleGridView -OutputMode Single -Title "Select a branch to fork from"
+    if ($existing) {
+        git checkout -b $Name $existing --no-track
+    }
+}
+
+function gco {
+    $branch = Get-GitBranches | Out-ConsoleGridView -OutputMode Single -Title "Select a branch to checkout"
+    if ($branch) {
+        git checkout $branch
+    }
+}
