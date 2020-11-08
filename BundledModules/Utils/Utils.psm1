@@ -71,7 +71,15 @@ function fork {
 }
 
 function gco {
-    $branch = Get-GitBranches | Out-ConsoleGridView -OutputMode Single -Title "Select a branch to checkout"
+    [CmdletBinding()]
+    param (
+        # Include Remotes
+        [Parameter()]
+        [switch]
+        $Remotes
+    )
+
+    $branch = Get-GitBranches -Remotes:$Remotes | Out-ConsoleGridView -OutputMode Single -Title "Select a branch to checkout"
     if ($branch) {
         git checkout $branch
     }
