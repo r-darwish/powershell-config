@@ -64,19 +64,19 @@ Set-Variable PSReadLineOptions -Scope Script -Option Constant -Value @{
     HistoryNoDuplicates           = $true
     HistorySearchCursorMovesToEnd = $true
     Colors                        = @{
-        Operator  = "Yellow"
-        Command   = "Yellow"
-        Parameter = "Blue"
-        Member    = "DarkYellow"
-        Selection = "`e[1;37;1;40m"
+        Operator         = "Yellow"
+        Command          = "Yellow"
+        Parameter        = "Blue"
+        Member           = "DarkYellow"
+        Selection        = "`e[1;37;1;40m"
+        InlinePrediction = "$([char]0x1b)[36;7;238m"
     }
 }
 Set-PSReadLineOption @PSReadLineOptions
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
-Set-PSReadLineKeyHandler -Key Ctrl+f -Function CharacterSearch
-Set-PSReadLineKeyHandler -Key Ctrl+b -Function CharacterSearchBackward
+Set-PSReadLineKeyHandler -Key Ctrl+f -Function ForwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+LeftArrow -Function BackwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+RightArrow -Function ForwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+Backspace -Function BackwardKillWord
@@ -103,6 +103,15 @@ function AddPrefix {
 
 Set-PSReadLineKeyHandler -Key Alt+x -ScriptBlock { AddPrefix "`$x = " }
 Set-PSReadLineKeyHandler -Key Alt+s -ScriptBlock { AddPrefix "sudo " }
+Set-PSReadLineKeyHandler -Key Alt+w -ScriptBlock { 
+    $line = $null
+    $cursor = $null
+    [PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
+    [PSConsoleReadLine]::SetCursorPosition(0)
+    [PSConsoleReadLine]::Insert("(")
+    [PSConsoleReadLine]::SetCursorPosition($line.Length + 1)
+    [PSConsoleReadLine]::Insert(")")
+}
 
 function ocgv_history {
     $line = $null
