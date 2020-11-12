@@ -46,7 +46,12 @@ function Get-GitBranches {
         # Include Remotes
         [Parameter()]
         [switch]
-        $Remotes
+        $Remotes,
+
+        # Include tags
+        [Parameter()]
+        [switch]
+        $Tags
     )
 
     $gitArgs = @("branch", '--format=%(refname:short)')
@@ -54,6 +59,10 @@ function Get-GitBranches {
         $gitArgs += "-r"
     }
     git $gitArgs
+
+    if ($Tags) {
+        git tag
+    }
 }
 
 function fork {
@@ -73,14 +82,32 @@ function fork {
 function gco {
     [CmdletBinding()]
     param (
+        # Reference to checkout
+        [Parameter(Position = 0)]
+        [string]
+        $Reference,
+
         # Include Remotes
         [Parameter()]
         [switch]
-        $Remotes
+        $Remotes,
+
+        # Include tags
+        [Parameter()]
+        [switch]
+        $Tags
     )
 
-    $branch = Get-GitBranches -Remotes:$Remotes | Out-ConsoleGridView -OutputMode Single -Title "Select a branch to checkout"
-    if ($branch) {
-        git checkout $branch
+    if (-not $Reference) {
+        $Reference = Get-GitBranches -Remotes:$Remotes -Tags:$Tags | Out-ConsoleGridView -OutputMode Single -Title "Select a branch to checkout"
     }
+
+    if ($Reference) {
+        git checkout $Reference
+    }
+}
+
+Register-ArgumentCompleter -CommandName gco -ParameterName Reference -ScriptBlock {
+    param($commandName, $parameterName, $wordToComplete)
+    Get-GitBranches -Remotes -Tags
 }
