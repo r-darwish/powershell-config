@@ -84,6 +84,10 @@ Set-PSReadLineKeyHandler -Key Alt+j -ScriptBlock {
     [PSConsoleReadLine]::AcceptSuggestion(); 
     [PSConsoleReadLine]::AcceptLine() 
 }
+Set-PSReadLineKeyHandler -Key Alt+u -ScriptBlock { 
+    Set-Location -
+    [PSConsoleReadLine]::AcceptLine()
+}
 
 function AddPrefix {
     param([string]$prefix)
