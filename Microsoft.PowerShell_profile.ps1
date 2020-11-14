@@ -1,5 +1,6 @@
 using namespace Microsoft.PowerShell;
 
+#region setup
 Set-Variable ProfileDirectory -Option Constant -Value $PSScriptRoot
 Set-Alias -Name which -Value Get-Command
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -46,6 +47,7 @@ function AddPath {
 
 $env:PSModulePath = AddPath $env:PSModulePath (Join-Path $ProfileDirectory "BundledModules")
 $env:PATH = AddPath $env:PATH (Join-Path $ProfileDirectory "Scripts")
+$env:EDITOR = "vim"
 
 function Install-NeededModules {
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
@@ -57,6 +59,9 @@ function Install-NeededModules {
 
     Install-Module -AllowClobber "Get-ChildItemColor"
 }
+
+#endregion
+#region readline
 
 Set-Variable PSReadLineOptions -Scope Script -Option Constant -Value @{
     EditMode                      = "Emacs"
@@ -80,11 +85,14 @@ Set-PSReadLineKeyHandler -Key Ctrl+f -Function ForwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+LeftArrow -Function BackwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+RightArrow -Function ForwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+Backspace -Function BackwardKillWord
-Set-PSReadLineKeyHandler -Key Alt+j -ScriptBlock { 
+Set-PSReadLineKeyHandler -Key F1 -Function WhatIsKey
+Set-PSReadLineKeyHandler -Key Ctrl+Shift+LeftArrow -Function SelectBackwardWord
+Set-PSReadLineKeyHandler -Key Ctrl+Shift+RightArrow -Function SelectForwardWord
+Set-PSReadLineKeyHandler -Key Alt+j -BriefDescription AccestSuggestionAndExecute -LongDescription "Accept and execute the current suggestion" -ScriptBlock { 
     [PSConsoleReadLine]::AcceptSuggestion(); 
     [PSConsoleReadLine]::AcceptLine() 
 }
-Set-PSReadLineKeyHandler -Key Alt+u -ScriptBlock { 
+Set-PSReadLineKeyHandler -Key Ctrl+UpArrow -BriefDescription GoBack -LongDescription "Go back one directory" -ScriptBlock { 
     Set-Location -
     [PSConsoleReadLine]::AcceptLine()
 }
@@ -105,9 +113,9 @@ function AddPrefix {
     [PSConsoleReadLine]::SetCursorPosition($cursor + $prefix.Length)
 }
 
-Set-PSReadLineKeyHandler -Key Alt+x -ScriptBlock { AddPrefix "`$x = " }
-Set-PSReadLineKeyHandler -Key Alt+s -ScriptBlock { AddPrefix "sudo " }
-Set-PSReadLineKeyHandler -Key Alt+w -ScriptBlock { 
+Set-PSReadLineKeyHandler -Key Alt+x -BriefDescription StoreInVariable -LongDescription "Add `$x = to the beginning of the line" -ScriptBlock { AddPrefix "`$x = " }
+Set-PSReadLineKeyHandler -Key Alt+s -BriefDescription PrependSudo -LongDescription "Add sudo to the beginning of the line" -ScriptBlock { AddPrefix "sudo " }
+Set-PSReadLineKeyHandler -Key Alt+w -BriefDescription WrapWithParenthesis -LongDescription "Wrap the command with parenthesis" -ScriptBlock { 
     $line = $null
     $cursor = $null
     [PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
@@ -117,50 +125,7 @@ Set-PSReadLineKeyHandler -Key Alt+w -ScriptBlock {
     [PSConsoleReadLine]::Insert(")")
 }
 
-function ocgv_history {
-    $line = $null
-    $cursor = $null
-    [PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
-    $selection = $history | Out-ConsoleGridView -Title "Select CommandLine from History" -OutputMode Single -Filter $line
-    if ($selection) {
-        [PSConsoleReadLine]::DeleteLine()
-        [PSConsoleReadLine]::Insert($selection)
-        if ($selection.StartsWith($line)) {
-            [PSConsoleReadLine]::SetCursorPosition($cursor)
-        }
-        else {
-            [PSConsoleReadLine]::SetCursorPosition($selection.Length)
-        }    
-    }
-}
-
-$parameters = @{
-    Key              = 'F7'
-    BriefDescription = 'ShowMatchingHistoryOcgv'
-    LongDescription  = 'Show Matching History using Out-ConsoleGridView'
-    ScriptBlock      = {
-        param($key, $arg)   # The arguments are ignored in this example
-
-        $history = Get-History | Sort-Object -Descending -Property Id -Unique | Select-Object CommandLine -ExpandProperty CommandLine 
-        $history | ocgv_history
-    }
-}
-Set-PSReadLineKeyHandler @parameters
-
-$parameters = @{
-    Key              = 'Shift-F7'
-    BriefDescription = 'ShowMatchingGlobalHistoryOcgv'
-    LongDescription  = 'Show Matching History for all PowerShell instances using Out-ConsoleGridView'
-    ScriptBlock      = {
-        param($key, $arg)   # The arguments are ignored in this example
-        $history = [PSConsoleReadLine]::GetHistoryItems().CommandLine 
-        # reverse the items so most recent is on top
-        [array]::Reverse($history) 
-        $history | Select-Object -Unique | ocgv_history
-    }
-}
-Set-PSReadLineKeyHandler @parameters
-
+#endregion
 
 If (-Not (Test-Path Variable:PSise)) {
     Set-Alias ls Get-ChildItemColor -Option AllScope
