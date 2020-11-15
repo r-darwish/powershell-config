@@ -73,7 +73,7 @@ Set-Variable PSReadLineOptions -Scope Script -Option Constant -Value @{
         Command          = "Yellow"
         Parameter        = "Blue"
         Member           = "DarkYellow"
-        Selection        = "`e[1;37;1;40m"
+        Selection        = "$([char]0x1b)[36;7;238m"
         InlinePrediction = "$([char]0x1b)[36;7;238m"
     }
 }
@@ -85,6 +85,7 @@ Set-PSReadLineKeyHandler -Key Ctrl+f -Function ForwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+LeftArrow -Function BackwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+RightArrow -Function ForwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+Backspace -Function BackwardKillWord
+Set-PSReadLineKeyHandler -Key Alt+Backspace -Function BackwardKillWord
 Set-PSReadLineKeyHandler -Key F1 -Function WhatIsKey
 Set-PSReadLineKeyHandler -Key Ctrl+Shift+LeftArrow -Function SelectBackwardWord
 Set-PSReadLineKeyHandler -Key Ctrl+Shift+RightArrow -Function SelectForwardWord
