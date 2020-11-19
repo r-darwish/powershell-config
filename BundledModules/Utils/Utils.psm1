@@ -123,3 +123,43 @@ function whatif {
     Write-Host "Turning $humanState global WhatIf mode"
     $global:WhatIfPreference = $newState
 }
+
+function Reset-GitDirectory {
+    [CmdletBinding(
+        SupportsShouldProcess = $true,
+        ConfirmImpact = 'High')]
+    param(
+        # Commit
+        [Parameter(Position = 0)]
+        [string]
+        $Commit = "",
+        # Directories
+        [Parameter(Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [string[]]
+        $Path = @(".")
+    )
+    
+    foreach ($p in $Path) {
+        $abs = Resolve-Path $p
+        if (-not $?) {
+            continue
+        }
+
+        Push-Location $p
+        if (-not $Commit) {
+            $Commit = git branch "--format=%(upstream:short)"
+            if (-not $?) {
+                Write-Error "$abs`: Cannot find the upstream branch"
+                continue
+            }
+        }
+
+        if ($?) {
+            if ($PSCmdlet.ShouldProcess($abs, "Reset to $Commit")) {
+                git reset $Commit --hard
+            }
+        }
+    }
+}
+
+New-Alias grs Reset-GitDirectory
