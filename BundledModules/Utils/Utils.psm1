@@ -116,3 +116,10 @@ function gituser {
     $email = "rodarwis@microsoft.com", "roey.ghost@gmail.com" | Out-ConsoleGridView -OutputMode Single -Title "Select a git user"
     git config user.email $email
 }
+
+function whatif {
+    $newState = -not $WhatIfPreference
+    $humanState = $newState ? "on" : "off"
+    Write-Host "Turning $humanState global WhatIf mode"
+    $global:WhatIfPreference = $newState
+}
