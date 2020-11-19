@@ -51,13 +51,11 @@ $env:EDITOR = "vim"
 
 function Install-NeededModules {
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-    @("PSReadline", "ZLocation", "posh-git", "ConsoleGuiTools").ForEach{ Install-Module $_ -Force }
+    @("PSReadline", "ZLocation", "posh-git", "ConsoleGuiTools", "Terminal-Icons").ForEach{ Install-Module $_ -Force }
 
     if (!$IsWindows) {
         Install-Module UnixCompleters
     }
-
-    Install-Module -AllowClobber "Get-ChildItemColor"
 }
 
 #endregion
@@ -128,9 +126,7 @@ Set-PSReadLineKeyHandler -Key Alt+w -BriefDescription WrapWithParenthesis -LongD
 
 #endregion
 
-If (-Not (Test-Path Variable:PSise)) {
-    Set-Alias ls Get-ChildItemColor -Option AllScope
-}
+Import-Module "Terminal-Icons"
 
 if (Test-Path "Env:\PWD") {
     Remove-Item "Env:\PWD"
