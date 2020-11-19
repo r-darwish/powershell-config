@@ -134,30 +134,37 @@ function Reset-GitDirectory {
         [string]
         $Commit = "",
         # Directories
+        [SupportsWildcards()]
         [Parameter(Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [string[]]
         $Path = @(".")
     )
     
-    foreach ($p in $Path) {
+    foreach ($p in (Get-Item $Path)) {
         $abs = Resolve-Path $p
         if (-not $?) {
             continue
         }
+        Write-Verbose $abs
 
         Push-Location $p
-        if (-not $Commit) {
-            $Commit = git branch "--format=%(upstream:short)"
-            if (-not $?) {
-                Write-Error "$abs`: Cannot find the upstream branch"
-                continue
+        try {
+            if (-not $Commit) {
+                $Commit = git branch "--format=%(upstream:short)"
+                if (-not $?) {
+                    Write-Error "$abs`: Cannot find the upstream branch"
+                    continue
+                }
+            }
+
+            if ($?) {
+                if ($PSCmdlet.ShouldProcess($abs, "Reset to $Commit")) {
+                    git reset $Commit --hard
+                }
             }
         }
-
-        if ($?) {
-            if ($PSCmdlet.ShouldProcess($abs, "Reset to $Commit")) {
-                git reset $Commit --hard
-            }
+        finally {
+            Pop-Location
         }
     }
 }
