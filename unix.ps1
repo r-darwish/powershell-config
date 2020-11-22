@@ -14,6 +14,7 @@ Set-Alias -Name t -Value Enter-TmuxSession
 Set-Alias -Name rm -Value Remove-Item
 Set-Alias -Name cp -Value Copy-Item
 Set-Alias -Name mv -Value Move-Item
+Set-Alias -Name ls -Value Get-ChildItem
 
 $env:PATH = AddPath $env:PATH "/usr/local/bin", "$home/.local/bin", "$home/.cargo/bin" -Prepend
 
