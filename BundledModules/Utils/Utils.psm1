@@ -170,3 +170,40 @@ function Reset-GitDirectory {
 }
 
 New-Alias grs Reset-GitDirectory
+
+function Get-Vagrant {
+    [CmdletBinding()]
+    param ()
+    
+    vagrant global-status --machine-readable 
+    | ConvertFrom-Csv -WarningAction SilentlyContinue 
+    | Where-Object metadata -EQ machine-home 
+    | Select-Object -Property @{Name = "Name"; Expression = { Split-Path $_."machine-count" -Leaf } }, @{Name = "Path"; Expression = { $_."machine-count" } }
+}
+
+function Enter-Vagrant {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory, Position = 0)]
+        [string]$Name
+    )
+        
+    $machine = Get-Vagrant | Where-Object Name -EQ $Name
+    if (-not $machine) { throw "No vagrant machine named $Name" }
+    
+    Push-Location $machine.Path
+    $status = vagrant status --machine-readable | ConvertFrom-Csv | Where-Object metadata -EQ state-human-short | Select-Object -ExpandProperty provider
+    if (-not $status) { throw "Vagrant failed" }
+    
+    if ($status -eq "poweroff") {
+        vagrant up || throw "Error turning on the machine"
+    }
+
+    vagrant ssh
+
+    if ($status -eq "poweroff") {
+        vagrant halt
+    }
+
+    Pop-Location
+}
