@@ -33,7 +33,7 @@ if ($IsMacOS) {
     $packages += (Get-ChildItem /Applications -Filter *.app -Directory ).ForEach{ [Package]::new($_.Name -replace ".app", "MacApplication") }
 }
 elseif ($IsWindows) {
-    if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    if (-not (Test-Admin)) {
         throw "This script show run as an administrator"
     }
 

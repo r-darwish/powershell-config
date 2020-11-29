@@ -192,17 +192,33 @@ function Enter-Vagrant {
     if (-not $machine) { throw "No vagrant machine named $Name" }
     
     Push-Location $machine.Path
-    $status = vagrant status --machine-readable | ConvertFrom-Csv | Where-Object metadata -EQ state-human-short | Select-Object -ExpandProperty provider
-    if (-not $status) { throw "Vagrant failed" }
+
+    $isHyperv = Test-Path .\.vagrant\machines\default\hyperv
     
-    if ($status -eq "poweroff") {
-        vagrant up || throw "Error turning on the machine"
+    $activate = {
+        param($isHyperv)
+
+        $status = vagrant status --machine-readable | ConvertFrom-Csv -Header timestamp, target, type, data | Where-Object type -EQ state-human-short | Select-Object -ExpandProperty data
+        if (-not $status) { throw "Vagrant failed" }
+    
+        $off = $status -like "*off"
+        if ($off) {
+            vagrant up || throw "Error turning on the machine"
+        }
+
+        vagrant ssh
+
+        if ($off) {
+            vagrant halt
+        }
     }
 
-    vagrant ssh
-
-    if ($status -eq "poweroff") {
-        vagrant halt
+    if ($isHyperv -and (-not (Test-Admin))) {
+        Write-Debug "Hyper-V machine. Using sudo"
+        sudo pwsh -Command $activate -args $isHyperv
+    }
+    else {
+        & $activate
     }
 
     Pop-Location

@@ -17,3 +17,7 @@ function Install-Topgrade {
     Move-Item topgrade/topgrade.exe .
     Remove-Item topgrade.zip, topgrade
 }
+
+function Test-Admin {
+    ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
+}
