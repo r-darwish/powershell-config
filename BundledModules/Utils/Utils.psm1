@@ -150,7 +150,7 @@ function Reset-GitDirectory {
         Push-Location $p
         try {
             if (-not $Commit) {
-                $Commit = git branch "--format=%(upstream:short)"
+                $Commit = ((git branch "--format=%(upstream:short)") -split "\n")[0]
                 if (-not $?) {
                     Write-Error "$abs`: Cannot find the upstream branch"
                     continue
