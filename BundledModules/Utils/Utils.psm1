@@ -223,3 +223,9 @@ function Enter-Vagrant {
 
     Pop-Location
 }
+
+function dark {
+    if ($IsMacOS) {
+        osascript -e 'tell app \"System Events\" to tell appearance preferences to set dark mode to not dark mode'
+    }
+}
