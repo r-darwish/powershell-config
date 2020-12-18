@@ -79,6 +79,7 @@
         "gituser",
         "kubectx",
         "New-Container",
+        "Send-WOL",
         "Reset-GitDirectory",
         "whatif"
     )
