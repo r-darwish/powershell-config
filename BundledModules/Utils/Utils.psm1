@@ -230,8 +230,6 @@ function dark {
     }
 }
 
-
-
 function Send-WOL {
     [CmdletBinding()]
     param(
