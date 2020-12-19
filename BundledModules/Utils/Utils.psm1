@@ -228,6 +228,11 @@ function dark {
     if ($IsMacOS) {
         osascript -e 'tell app \"System Events\" to tell appearance preferences to set dark mode to not dark mode'
     }
+    elseif ($IsWindows) {
+        $value = (Get-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize).SystemUsesLightTheme -bxor 1
+        [Void](New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name SystemUsesLightTheme -Value $value -Type Dword -Force)
+        [Void](New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name AppsUseLightTheme -Value $value -Type Dword -Force)
+    }
 }
 
 function Send-WOL {
