@@ -80,6 +80,7 @@
         "kubectx",
         "New-Container",
         "Send-WOL",
+        "Remove-KnownHost"
         "Reset-GitDirectory",
         "whatif"
     )

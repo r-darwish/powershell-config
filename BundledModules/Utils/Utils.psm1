@@ -253,3 +253,31 @@ function Send-WOL {
     $UDPclient.Connect($broadcast, $port)
     [void]$UDPclient.Send($packet, 102)
 }
+
+function Remove-KnownHost {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [int[]]$Line
+    )
+    begin {
+        $hosts = Get-Content ~/.ssh/known_hosts || throw "Error reading the host file"
+        $newHosts = ""
+    }
+    
+    process {
+        for ($i = 0; $i -lt $hosts.Count; $i++) {
+            $currentLine = $i + 1
+            if ($currentLine -in $Line) {
+                Write-Verbose "Dropping $($hosts[$i])"
+                continue
+            }
+
+            $newHosts += $hosts[$i] + "`n"
+        }
+    }
+    
+    end {
+        $newHosts > ~/.ssh/known_hosts
+    }
+}
