@@ -2,7 +2,6 @@ using namespace Microsoft.PowerShell;
 
 #region setup
 Set-Variable ProfileDirectory -Option Constant -Value $PSScriptRoot
-Set-Alias -Name which -Value Get-Command
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 function AddPath {
@@ -51,7 +50,7 @@ $env:EDITOR = "vim"
 
 function Install-NeededModules {
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-    @("PSReadline", "ZLocation", "posh-git", "ConsoleGuiTools", "Terminal-Icons").ForEach{ Install-Module $_ -Force }
+    @("PSReadline", "ZLocation", "posh-git", "Microsoft.Powershell.ConsoleGuiTools", "Terminal-Icons").ForEach{ Install-Module $_ -Force }
 
     if (!$IsWindows) {
         Install-Module UnixCompleters

@@ -82,6 +82,7 @@
         "Send-WOL",
         "Remove-KnownHost"
         "Reset-GitDirectory",
+        "which",
         "whatif"
     )
 

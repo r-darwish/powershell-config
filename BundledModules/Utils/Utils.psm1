@@ -281,3 +281,13 @@ function Remove-KnownHost {
         $newHosts > ~/.ssh/known_hosts
     }
 }
+
+function which {
+    param (
+        [Parameter(Mandatory)]
+        [string]$Command
+    )
+    
+    $cmd = Get-Command $Command
+    $cmd.Source
+}
