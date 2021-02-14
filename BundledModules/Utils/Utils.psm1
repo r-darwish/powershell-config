@@ -291,3 +291,40 @@ function which {
     $cmd = Get-Command $Command
     $cmd.Source
 }
+
+function New-CompressedPDF {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory, Position = 0, ValueFromPipeline)]
+        [string]$InputFile,
+
+        [Parameter(Position = 1)]
+        [string]$OutputFile
+    )
+    
+    begin {
+        if ($IsWindows) {
+            $InputFile = $InputFile -replace ".\\", ""
+            $OutputFile = $OutputFile -replace ".\\", ""
+        }
+
+        if (-not $OutputFile) {
+            $OutputFile = $InputFile -replace ".pdf", "-c.pdf"
+        }
+
+        $command = $IsWindows ? "wsl" : "gs"
+        $params = @("-sDEVICE=pdfwrite", "-dCompatibilityLevel=1.4", "-dPDFSETTINGS=/ebook", "-dNOPAUSE", "-dBATCH", "-dColorImageResolution=150", "-sOutputFile=$OutputFile.pdf", $InputFile)
+        if ($IsWindows) {
+            $params = @("gs") + $params
+        }
+    }
+    
+    process {
+        Write-Verbose "Compressing $InputFile to $OutputFile"
+        & $command $params
+    }
+    
+    end {
+        
+    }
+}

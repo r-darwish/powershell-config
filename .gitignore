@@ -1,3 +1,5 @@
 Modules
 local.ps1
 Help
+.fake
+.ionide

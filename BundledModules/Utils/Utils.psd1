@@ -78,6 +78,7 @@
         "Get-Vagrant",
         "gituser",
         "kubectx",
+        "New-CompressedPDF",
         "New-Container",
         "Send-WOL",
         "Remove-KnownHost"
