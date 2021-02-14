@@ -303,20 +303,12 @@ function New-CompressedPDF {
     )
     
     begin {
-        if ($IsWindows) {
-            $InputFile = $InputFile -replace ".\\", ""
-            $OutputFile = $OutputFile -replace ".\\", ""
-        }
-
         if (-not $OutputFile) {
-            $OutputFile = $InputFile -replace ".pdf", "-c.pdf"
+            $OutputFile = $InputFile -replace ".pdf", "-c"
         }
 
-        $command = $IsWindows ? "wsl" : "gs"
+        $command = $IsWindows ? (Get-Item 'C:\Program Files\gs\*\bin\gswin64c.exe').FullName : "gs"
         $params = @("-sDEVICE=pdfwrite", "-dCompatibilityLevel=1.4", "-dPDFSETTINGS=/ebook", "-dNOPAUSE", "-dBATCH", "-dColorImageResolution=150", "-sOutputFile=$OutputFile.pdf", $InputFile)
-        if ($IsWindows) {
-            $params = @("gs") + $params
-        }
     }
     
     process {
