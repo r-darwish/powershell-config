@@ -27,6 +27,11 @@ enum PackageManager {
 
 $packages = @()
 
+function exists {
+    param ($Command)
+    $null -ne (Get-Command $Command -ErrorAction SilentlyContinue)
+}
+
 if ($IsMacOS) {
     $packages += (brew leaves).ForEach{ [Package]::new($_, "Brew") }
     $packages += (brew list --cask).ForEach{ [Package]::new($_, "BrewCask") }
@@ -37,9 +42,13 @@ elseif ($IsWindows) {
         throw "This script show run as an administrator"
     }
 
-    $packages += (chocolatey list -localonly --idonly --limitoutput).ForEach{ [Package]::new($_, "Chocolatey") }
-    $packages += (scoop list 6>&1 | Where-Object { $_.MessageData.Message.StartsWith("  ") }).ForEach{ 
-        [Package]::new($_.MessageData.Message.Trim(), "Scoop") 
+    if (exists chocolatey) {
+        $packages += (chocolatey list -localonly --idonly --limitoutput).ForEach{ [Package]::new($_, "Chocolatey") }
+    }
+    if (exists sccop) {
+        $packages += (scoop list 6>&1 | Where-Object { $_.MessageData.Message.StartsWith("  ") }).ForEach{ 
+            [Package]::new($_.MessageData.Message.Trim(), "Scoop") 
+        }
     }
     $packages += (Get-CimInstance -ClassName Win32_Product | Sort-Object -Property Name).ForEach{ [Package]::new($_.Name, "Win32App", $_) }
     $packages += (Get-AppxPackage -AllUsers | Sort-Object -Property Name).ForEach{ [Package]::new($_.Name, "Appx", $_) }
