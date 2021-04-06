@@ -27,14 +27,35 @@ function New-VirtualEnvironment {
         $Name,
         
         [Parameter()]
-        $Python = "python3")
+        [string]
+        $Python = $IsWindows ? "python.exe" : "python3",
+
+        [Parameter()]
+        [string[]]
+        $Requirements,
+
+        [Parameter(Position = 1)]
+        [string[]]
+        $Package
+    )
 
     &$Python -m virtualenv (Join-Path $VirtualEnvironmentDirectory $Name -ErrorAction Stop)
+
     if ($LastExitCode -ne 0) {
         throw "Environment creation failed"
     }
 
     Enter-VirtualEnvironment $Name
+    
+    foreach ($req in $Requirements) {
+        $Package += "-r", $req
+    }
+
+    if ($Package) {
+        $Package = @("install") + $Package
+        Write-Debug "pip ${Package}"
+        & pip $Package
+    }
 }
 
 function Remove-VirtualEnvironment {
