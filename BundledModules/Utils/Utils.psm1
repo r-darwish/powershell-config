@@ -54,11 +54,10 @@ function Get-GitBranches {
         $Tags
     )
 
-    $gitArgs = @("branch", '--format=%(refname:short)')
+    git branch "--format=%(refname:short)"
     if ($Remotes) {
-        $gitArgs += "-r"
+        git branch -r "--format=%(refname:short)"
     }
-    git $gitArgs
 
     if ($Tags) {
         git tag
@@ -79,7 +78,7 @@ function fork {
     }
 }
 
-function gco {
+function Set-GitBranch {
     [CmdletBinding()]
     param (
         # Reference to checkout
@@ -95,7 +94,12 @@ function gco {
         # Include tags
         [Parameter()]
         [switch]
-        $Tags
+        $Tags,
+
+        # Force branch creation if it doesn't exist
+        [Parameter()]
+        [switch]
+        $Force
     )
 
     if (-not $Reference) {
@@ -103,19 +107,29 @@ function gco {
     }
 
     if ($Reference) {
-        git checkout $Reference
+        $flags = @("checkout")
+        if ($Force) {
+            $flags += "-b"
+        }
+        $flags += $Reference
+
+        git $flags
     }
 }
 
-Register-ArgumentCompleter -CommandName gco -ParameterName Reference -ScriptBlock {
+New-Alias -Name gco -Value Set-GitBranch
+
+Register-ArgumentCompleter -CommandName Set-GitBranch -ParameterName Reference -ScriptBlock {
     param($commandName, $parameterName, $wordToComplete)
     Get-GitBranches -Remotes -Tags
 }
 
-function gituser {
+function Set-GitUser {
     $email = "rodarwis@microsoft.com", "roey.ghost@gmail.com" | Out-ConsoleGridView -OutputMode Single -Title "Select a git user"
     git config user.email $email
 }
+
+New-Alias -Name gituser -Value Set-GitUser
 
 function whatif {
     $newState = -not $WhatIfPreference

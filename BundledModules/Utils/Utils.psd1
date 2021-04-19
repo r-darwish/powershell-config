@@ -73,14 +73,14 @@
         "dark",
         "Enter-Vagrant",
         "fork",
-        "gco",
         "Get-GitBranches",
         "Get-Vagrant",
-        "gituser",
         "kubectx",
         "New-CompressedPDF",
         "New-Container",
         "Send-WOL",
+        "Set-GitBranch",
+        "Set-GitUser",
         "Remove-KnownHost"
         "Reset-GitDirectory",
         "which",
@@ -94,7 +94,7 @@
     VariablesToExport = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = @("grs")
+    AliasesToExport   = @("grs", "gco", "gituser")
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
