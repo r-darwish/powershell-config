@@ -23,6 +23,7 @@ enum PackageManager {
     Scoop
     Win32App
     Appx
+    Pacman
 }
 
 $packages = @()
@@ -53,6 +54,9 @@ elseif ($IsWindows) {
     $packages += (Get-CimInstance -ClassName Win32_Product | Sort-Object -Property Name).ForEach{ [Package]::new($_.Name, "Win32App", $_) }
     $packages += (Get-AppxPackage -AllUsers | Sort-Object -Property Name).ForEach{ [Package]::new($_.Name, "Appx", $_) }
 }
+elseif ($IsLinux) {
+    $packages += (pacman -Qe).ForEach{ [Package]::new(($_ -split " ")[0], "Pacman") }
+}
 
 $toRemove = $packages | Out-ConsoleGridView -Title "Select packages to remove"
 
@@ -60,13 +64,14 @@ foreach ($pkg in $toRemove) {
     Write-Host Removing $pkg.Name
 
     switch ($pkg.Manager) {
-        "Brew" { brew  rmtree $pkg.Name || Write-Error "Error removing $pkg.name" }
-        "BrewCask" { brew cask uninstall $pkg.Name || Write-Error "Error removing $pkg.name" }
-        "MacApplication" { Remove-Item -Recurse -Force (Join-Path /Applications ($pkg.Name + ".app")) || Write-Error "Error removing $pkg.name" }
-        "Chocolatey" { choco uninstall $pkg.name || Write-Error "Error removing $pkg.name" }
-        "Scoop" { scoop uninstall $pkg.name || Write-Error "Error removing $pkg.name" }
+        "Brew" { brew  rmtree $pkg.Name || Write-Error "Error removing $($pkg.name)" }
+        "BrewCask" { brew cask uninstall $pkg.Name || Write-Error "Error removing $($pkg.name)" }
+        "MacApplication" { Remove-Item -Recurse -Force (Join-Path /Applications ($pkg.Name + ".app")) || Write-Error "Error removing $($pkg.name)" }
+        "Chocolatey" { choco uninstall $($pkg.name) || Write-Error "Error removing $($pkg.name)" }
+        "Scoop" { scoop uninstall $($pkg.name) || Write-Error "Error removing $($pkg.name)" }
         "Win32App" { $pkg.Object | Invoke-CimMethod -MethodName Uninstall }
         "Appx" { $pkg.Object | Remove-AppxPackage -AllUsers }
-        Default { Write-Error "Unhandled package manager $pkg.Manager" }
+        "Pacman" { sudo pacman -Rns $pkg.Name || Write-Error "Error removing $($pkg.name)" }
+        Default { Write-Error "Unhandled package manager $($pkg.Manager)" }
     }
 }
