@@ -65,7 +65,7 @@ foreach ($pkg in $toRemove) {
 
     switch ($pkg.Manager) {
         "Brew" { brew  rmtree $pkg.Name || Write-Error "Error removing $($pkg.name)" }
-        "BrewCask" { brew cask uninstall $pkg.Name || Write-Error "Error removing $($pkg.name)" }
+        "BrewCask" { brew uninstall --cask $pkg.Name || Write-Error "Error removing $($pkg.name)" }
         "MacApplication" { Remove-Item -Recurse -Force (Join-Path /Applications ($pkg.Name + ".app")) || Write-Error "Error removing $($pkg.name)" }
         "Chocolatey" { choco uninstall $($pkg.name) || Write-Error "Error removing $($pkg.name)" }
         "Scoop" { scoop uninstall $($pkg.name) || Write-Error "Error removing $($pkg.name)" }
