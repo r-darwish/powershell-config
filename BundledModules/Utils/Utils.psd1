@@ -74,7 +74,7 @@
         "Enter-Vagrant",
         "fork",
         "Get-GitBranches",
-        "Get-Vagrant",
+        "Get-VagrantBox",
         "kubectx",
         "New-CompressedPDF",
         "New-Container",

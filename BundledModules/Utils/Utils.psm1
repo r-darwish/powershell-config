@@ -185,7 +185,7 @@ function Reset-GitDirectory {
 
 New-Alias grs Reset-GitDirectory
 
-function Get-Vagrant {
+function Get-VagrantBox {
     [CmdletBinding()]
     param ()
     
