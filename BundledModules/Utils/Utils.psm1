@@ -146,7 +146,7 @@ function Reset-GitDirectory {
         # Commit
         [Parameter(Position = 0)]
         [string]
-        $Commit = "",
+        $Commit = "HEAD",
         # Directories
         [SupportsWildcards()]
         [Parameter(Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
@@ -163,14 +163,6 @@ function Reset-GitDirectory {
 
         Push-Location $p
         try {
-            if (-not $Commit) {
-                $Commit = ((git branch "--format=%(upstream:short)") -split "\n")[0]
-                if (-not $?) {
-                    Write-Error "$abs`: Cannot find the upstream branch"
-                    continue
-                }
-            }
-
             if ($?) {
                 if ($PSCmdlet.ShouldProcess($abs, "Reset to $Commit")) {
                     git reset $Commit --hard
