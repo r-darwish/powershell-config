@@ -99,7 +99,12 @@ function Set-GitBranch {
         # Force branch creation if it doesn't exist
         [Parameter()]
         [switch]
-        $Force
+        $Force,
+
+        # Create from specific branch
+        [Parameter()]
+        [string]
+        $From
     )
 
     if (-not $Reference) {
@@ -107,6 +112,10 @@ function Set-GitBranch {
     }
 
     if ($Reference) {
+        if ($From) {
+            git checkout $From || throw "Unable to switch to the source branch"
+        }
+
         $flags = @("checkout")
         if ($Force) {
             $flags += "-b"
