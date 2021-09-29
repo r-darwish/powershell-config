@@ -51,7 +51,7 @@ Set-Alias -Name e -Value nvim
 
 function Install-NeededModules {
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-    @("PSReadline", "ZLocation", "posh-git", "Microsoft.Powershell.ConsoleGuiTools", "Terminal-Icons").ForEach{ Install-Module $_ -Force }
+    @("PSReadline", "ZLocation", "posh-git", "Microsoft.Powershell.ConsoleGuiTools").ForEach{ Install-Module $_ -Force }
 
     if (!$IsWindows) {
         Install-Module UnixCompleters
@@ -125,8 +125,6 @@ Set-PSReadLineKeyHandler -Key Alt+w -BriefDescription WrapWithParenthesis -LongD
 }
 
 #endregion
-
-Import-Module "Terminal-Icons"
 
 if (Test-Path "Env:\PWD") {
     Remove-Item "Env:\PWD"
