@@ -17,6 +17,6 @@ function InstallChocoDependency {
     }
 }
 
-InstallChocoDependency @("powershell-core", "microsoft-windows-terminal", "starship", "git")
+InstallChocoDependency @("powershell-core", "microsoft-windows-terminal", "starship", "git", "gsudo")
 git clone https://github.com/r-darwish/powershell-config (& 'C:\Program Files\PowerShell\7\pwsh.exe' -c 'Split-Path -parent $profile')
 &'C:\Program Files\PowerShell\7\pwsh.exe' -c "Install-NeededModules"
