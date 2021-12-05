@@ -46,8 +46,8 @@ function AddPath {
 
 $env:PSModulePath = AddPath $env:PSModulePath (Join-Path $ProfileDirectory "BundledModules")
 $env:PATH = AddPath $env:PATH (Join-Path $ProfileDirectory "Scripts")
-$env:EDITOR = "nvim"
-Set-Alias -Name e -Value nvim
+$env:EDITOR = "micro"
+Set-Alias -Name e -Value micro
 
 function Install-NeededModules {
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
