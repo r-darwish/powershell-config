@@ -335,3 +335,39 @@ function New-CompressedPDF {
         
     }
 }
+
+function BuildGo {
+    $binaryName = (Split-Path . -Leaf)
+    $outputDir = "out"
+    if (-not (Test-Path $outputDir)) {
+        New-Item -Path $outputDir -ItemType Directory
+    }
+    Push-Location $outputDir
+
+    $buildConfigurations = @(
+        ("linux", "amd64"), 
+        ("linux", "arm64"), 
+        ("windows", "amd64"), 
+        ("darwin", "amd64"),
+        ("darwin", "arm64")
+    )
+    foreach ($config in $buildConfigurations) {
+        $env:GOOS = $os = $config[0]
+        $env:GOARCH = $arch = $config[1]
+
+        $bin = $binaryName
+        if ($env:GOOS -eq "windows") {
+            $bin += ".exe"
+        }
+
+        Write-Host "Building $os $arch"
+        go build ..
+        if (-not $?) {
+            continue
+        }
+
+        Compress-Archive -Path $bin -DestinationPath "$binaryName-$os-$arch.zip"
+    }
+
+    Pop-Location
+}
