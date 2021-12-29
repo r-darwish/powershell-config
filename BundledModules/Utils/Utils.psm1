@@ -370,4 +370,29 @@ function BuildGo {
     }
 
     Pop-Location
+
+}
+function bi {
+    <#
+    .SYNOPSIS
+        Brew install
+    #>
+    param (
+        # Install a cask
+        [switch]
+        $Cask,
+
+        # Rest of the args
+        [Parameter(Position = 0, ValueFromRemainingArguments = $true, Mandatory = $true)]
+        $Args
+    )
+
+    $cmd = @("install")
+    if ($Cask) {
+        $cmd += "--cask"
+    }
+
+    $cmd += $Args
+
+    & brew @cmd
 }
