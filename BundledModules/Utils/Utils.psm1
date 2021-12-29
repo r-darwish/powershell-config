@@ -134,7 +134,7 @@ Register-ArgumentCompleter -CommandName Set-GitBranch -ParameterName Reference -
 }
 
 function Set-GitUser {
-    $email = "rodarwis@microsoft.com", "roey.ghost@gmail.com" | Out-ConsoleGridView -OutputMode Single -Title "Select a git user"
+    $email = "roey.dror@wiz.io", "roey.ghost@gmail.com" | Out-ConsoleGridView -OutputMode Single -Title "Select a git user"
     git config user.email $email
 }
 
