@@ -66,14 +66,6 @@ Set-Variable PSReadLineOptions -Scope Script -Option Constant -Value @{
     PredictionSource              = "History"
     HistoryNoDuplicates           = $true
     HistorySearchCursorMovesToEnd = $true
-    Colors                        = @{
-        Operator         = "Yellow"
-        Command          = "Yellow"
-        Parameter        = "Blue"
-        Member           = "DarkYellow"
-        Selection        = "$([char]0x1b)[36;7;238m"
-        InlinePrediction = "$([char]0x1b)[36;7;238m"
-    }
 }
 Set-PSReadLineOption @PSReadLineOptions
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
